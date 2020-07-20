@@ -5,9 +5,11 @@ namespace app\modules\admin\controllers;
 use Yii;
 use app\models\Page;
 use app\models\PageSearch;
+use app\models\ImageUpload;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * PageController implements the CRUD actions for Page model.
@@ -66,8 +68,10 @@ class PageController extends Controller
     {
         $model = new Page();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($this->saveImage($model)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }   
         }
 
         return $this->render('create', [
@@ -84,10 +88,14 @@ class PageController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $model = $this->findModel($id); 
+        $curImg = $model->img;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+
+            if ($this->saveImage($model, $curImg)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }   
         }
 
         return $this->render('update', [
@@ -123,5 +131,24 @@ class PageController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function saveImage($model, $curImg = null)
+    {
+        $img = UploadedFile::getInstance($model, 'img');
+        $modelImg = new ImageUpload(); 
+
+        if ($img) {
+            $model->img = $modelImg->UploadImage($img, $curImg);
+        }
+        else {
+            $modelImg->deleteImg($curImg);
+        }
+
+        if ($model->save()) {
+            return true;
+        }
+
+        return false;
     }
 }

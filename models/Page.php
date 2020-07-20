@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\ImageUpload;
 
 /**
  * This is the model class for table "page".
@@ -53,5 +54,17 @@ class Page extends \yii\db\ActiveRecord
     public function getBlocks()
     {
         return $this->hasMany(Block::className(), ['page_id' => 'id']);
+    }
+
+    public function beforeDelete()
+    {
+        $this->deleteImg();
+        return parent::beforeDelete();
+    }
+
+    public function deleteImg()
+    {    
+       $imageUpload = new ImageUpload();
+       $imageUpload->deleteImg($this->img);
     }
 }

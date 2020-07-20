@@ -17,12 +17,34 @@ class ImageUpload extends Model
 		];
 	}
 
-	public function UploadImage()
+	public function UploadImage(UploadedFile $img, $curImg)
 	{
+		$this->img = $img;
+
 		if ($this->validate()) {
-			$this->img->saveAs('images/'. $this->img .'.'. $this->img->extension);
-			return true;
+			$this->deleteImg($curImg);
+			return $this->saveImg();
 		}
-		return false;
+		
+	}
+
+	public function deleteImg($curImg)
+	{
+		if (file_exists($curImg)) {
+			unlink($curImg);  
+		}
+	}
+
+	public function saveImg()
+	{
+		$img = $this->generateImg();
+
+		$this->img->saveAs($img);
+		return $img;
+	}
+
+	public function generateImg()
+	{
+		return 'images/' . md5($this->img->baseName) .'.'. $this->img->extension;
 	}
 }
