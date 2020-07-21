@@ -67,4 +67,13 @@ class Block extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Column::className(), ['block_id' => 'id']);
     }
+
+    public function savePage($page_id)
+    {
+        $page = Page::findOne($page_id);
+        if ($page !== null) {
+            $this->link('page', $page);
+            return true;
+        }
+    }
 }

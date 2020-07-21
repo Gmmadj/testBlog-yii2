@@ -8,6 +8,8 @@ use app\models\BlockSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use app\models\Page;
 
 /**
  * BlockController implements the CRUD actions for Block model.
@@ -65,13 +67,21 @@ class BlockController extends Controller
     public function actionCreate()
     {
         $model = new Block();
+        $selectedPage = $model->page->id;
+        $pages = ArrayHelper::map(Page::find()->all(), 'id', 'title');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $page_id = Yii::$app->request->post('page_id');
+
+            if ($model->savePage($page_id)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'pages' => $pages,
+            'selectedPage' => $selectedPage,
         ]);
     }
 
@@ -85,13 +95,21 @@ class BlockController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $selectedPage = $model->page->id;
+        $pages = ArrayHelper::map(Page::find()->all(), 'id', 'title');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $page_id = Yii::$app->request->post('page_id');
+
+            if ($model->savePage($page_id)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'pages' => $pages,
+            'selectedPage' => $selectedPage,
         ]);
     }
 
