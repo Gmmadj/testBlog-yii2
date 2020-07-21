@@ -27,10 +27,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'img',
+             [
+            'format' => 'html',
+            'label' => 'Page title',
+            'value' => function($data) {
+                return Html::img($data->getImage(), ['width' => 200]);
+             },
+            ],
             'header',
             'content:ntext',
-            'block_id',
+            [
+            'format' => 'html',
+            'label' => 'Block title',
+            'value' => 'block.title',
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -67,4 +67,9 @@ class Page extends \yii\db\ActiveRecord
        $imageUpload = new ImageUpload();
        $imageUpload->deleteImg($this->img);
     }
+
+    public function getImage()
+    {
+        return $this->img ? $this->img : '';
+    }
 }
