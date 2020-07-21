@@ -4,10 +4,12 @@ namespace app\modules\admin\controllers;
 
 use Yii;
 use app\models\Column;
+use app\models\Block;
 use app\models\ColumnSearch;
 use app\controllers\AppController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * ColumnController implements the CRUD actions for Column model.
@@ -65,15 +67,23 @@ class ColumnController extends AppController
     public function actionCreate()
     {
         $model = new Column();
+        $selectedBlock = $model->block->id;
+        $blocks = ArrayHelper::map(Block::find()->all(), 'id', 'title');
 
         if (Yii::$app->request->isPost) {
             if ($this->formProcessing($model)) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                $block_id = Yii::$app->request->post('block_id');
+
+                if ($model->saveBlock($block_id)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }   
         }
 
         return $this->render('create', [
             'model' => $model,
+            'selectedBlock' => $selectedBlock,
+            'blocks' => $blocks,
         ]);
     }
 
@@ -87,15 +97,23 @@ class ColumnController extends AppController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $selectedBlock = $model->block->id;
+        $blocks = ArrayHelper::map(Block::find()->all(), 'id', 'title');
 
         if (Yii::$app->request->isPost) {
             if ($this->formProcessing($model)) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                $block_id = Yii::$app->request->post('block_id');
+
+                if ($model->saveBlock($block_id)) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }   
         }
-            
+
         return $this->render('update', [
             'model' => $model,
+            'selectedBlock' => $selectedBlock,
+            'blocks' => $blocks,
         ]);
     }
 

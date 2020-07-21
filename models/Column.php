@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use app\models\ImageUpload;
+use app\models\Block;
 
 /**
  * This is the model class for table "column".
@@ -61,6 +62,15 @@ class Column extends \yii\db\ActiveRecord
     public function getBlock()
     {
         return $this->hasOne(Block::className(), ['id' => 'block_id']);
+    }
+
+    public function saveBlock($block_id)
+    {
+        $block = Block::findOne($block_id);
+        if ($block !== null) {
+            $this->link('block', $block);
+            return true;
+        }
     }
 
     public function beforeDelete()
