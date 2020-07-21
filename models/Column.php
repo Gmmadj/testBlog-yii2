@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\ImageUpload;
 
 /**
  * This is the model class for table "column".
@@ -60,5 +61,17 @@ class Column extends \yii\db\ActiveRecord
     public function getBlock()
     {
         return $this->hasOne(Block::className(), ['id' => 'block_id']);
+    }
+
+    public function beforeDelete()
+    {
+        $this->deleteImg();
+        return parent::beforeDelete();
+    }
+
+    public function deleteImg()
+    {    
+       $imageUpload = new ImageUpload();
+       $imageUpload->deleteImg($this->img);
     }
 }

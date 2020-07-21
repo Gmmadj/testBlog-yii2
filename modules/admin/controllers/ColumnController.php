@@ -5,14 +5,14 @@ namespace app\modules\admin\controllers;
 use Yii;
 use app\models\Column;
 use app\models\ColumnSearch;
-use yii\web\Controller;
+use app\controllers\AppController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * ColumnController implements the CRUD actions for Column model.
  */
-class ColumnController extends Controller
+class ColumnController extends AppController
 {
     /**
      * {@inheritdoc}
@@ -66,8 +66,10 @@ class ColumnController extends Controller
     {
         $model = new Column();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            if ($this->formProcessing($model)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }   
         }
 
         return $this->render('create', [
@@ -86,10 +88,12 @@ class ColumnController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->isPost) {
+            if ($this->formProcessing($model)) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }   
         }
-
+            
         return $this->render('update', [
             'model' => $model,
         ]);

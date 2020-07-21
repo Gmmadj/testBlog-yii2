@@ -45,6 +45,6 @@ class ImageUpload extends Model
 
 	public function generateImg()
 	{
-		return 'images/' . md5($this->img->baseName) .'.'. $this->img->extension;
+		return 'images/' . md5(uniqid($this->img->baseName)) .'.'. $this->img->extension;
 	}
 }
