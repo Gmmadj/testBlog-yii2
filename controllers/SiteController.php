@@ -62,7 +62,7 @@ class SiteController extends Controller
 
         if (Yii::$app->request->isPost) {
             if ($contactForm->load(Yii::$app->request->post())) {
-                $contactForm->contact('');
+                $contactForm->contact('mail@mail.ru');
             }
         }
 

@@ -12,7 +12,7 @@ class ContactForm extends Model
 {
     public $name;
     public $email;
-    public $subject;
+    public $message;
 
     /**
      * @return array the validation rules.
@@ -21,10 +21,9 @@ class ContactForm extends Model
     {
         return [
             // name, email, subject and body are required
-            [['name', 'email', 'subject'], 'required'],
+            [['name', 'email', 'message'], 'required'],
             // email has to be a valid email address
             ['email', 'email'],
-            ['message', 'text'],
         ];
     }
 
