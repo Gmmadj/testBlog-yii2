@@ -58,13 +58,6 @@ class SiteController extends Controller
     public function actionContact()
     {
         $page = Page::findOne(['title' => 'contact']);    
-
-        return $this->render('contact', compact('page'));
-    }
-
-    public function actionMail()
-    {
-        $page = Page::findOne(['title' => 'contact']); 
         $contactForm = new ContactForm();
 
         if (Yii::$app->request->isPost) {
@@ -73,6 +66,6 @@ class SiteController extends Controller
             }
         }
 
-        return $this->redirect(['contact', compact('page', 'contactForm')]);
+        return $this->render('contact', compact('page', 'contactForm'));
     }
 }
