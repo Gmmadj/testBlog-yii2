@@ -72,4 +72,14 @@ class Page extends \yii\db\ActiveRecord
     {
         return $this->img ? $this->img : '';
     }
+
+    public function getExistingBlock()
+    {
+        $blocks = array();
+        $i = 0;
+        foreach ($this->blocks as $block) {
+            $blocks += [$i++ => $block];
+        }
+        return $blocks;
+    }
 }

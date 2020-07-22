@@ -34,29 +34,30 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $model = Page::findOne(['title' => 'index']);
-
-        return $this->render('index', compact('model'));
+        $page = Page::findOne(['title' => 'index']);
+        $blocks = $page->getExistingBlock();
+        
+        return $this->render('index', compact('page', 'blocks'));
     }
     
     public function actionOurCompany()    
     {
-        $model = Page::findOne(['title' => 'our company']);
+        $page = Page::findOne(['title' => 'our company']);
 
-        return $this->render('our-company');
+        return $this->render('our-company', compact('page'));
     }
 
     public function actionService()
     {
-        $model = Page::findOne(['title' => 'service']);
+        $page = Page::findOne(['title' => 'service']);
 
-        return $this->render('service');
+        return $this->render('service', compact('page'));
     }
 
     public function actionContact()
     {
-        $model = Page::findOne(['title' => 'contact']);    
+        $page = Page::findOne(['title' => 'contact']);    
 
-        return $this->render('contact');
+        return $this->render('contact', compact('page'));
     }
 }
