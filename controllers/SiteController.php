@@ -36,7 +36,7 @@ class SiteController extends Controller
     {
         $page = Page::findOne(['title' => 'index']);
         $blocks = $page->getExistingBlock();
-        
+
         return $this->render('index', compact('page', 'blocks'));
     }
     
@@ -59,5 +59,20 @@ class SiteController extends Controller
         $page = Page::findOne(['title' => 'contact']);    
 
         return $this->render('contact', compact('page'));
+    }
+
+    public function actionMail()
+    {
+        $page = Page::findOne(['title' => 'contact']); 
+
+        if (Yii::$app->request->isPost) {
+            Yii::$app->mailer->compose()
+                 ->setFrom(Yii::$app->request->post('email'))
+                 ->setTo('to@domain.com')
+                 ->setSubject('Контакты клиента')
+                 ->setTextBody(Yii::$app->request->post('message'))
+                 ->send();
+            return $this->redirect(['contact', compact('page')]);
+        }
     }
 }
