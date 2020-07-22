@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\Page;
+use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -64,15 +65,14 @@ class SiteController extends Controller
     public function actionMail()
     {
         $page = Page::findOne(['title' => 'contact']); 
+        $contactForm = new ContactForm();
 
         if (Yii::$app->request->isPost) {
-            Yii::$app->mailer->compose()
-                 ->setFrom(Yii::$app->request->post('email'))
-                 ->setTo('to@domain.com')
-                 ->setSubject('Контакты клиента')
-                 ->setTextBody(Yii::$app->request->post('message'))
-                 ->send();
-            return $this->redirect(['contact', compact('page')]);
+            if ($contactForm->load(Yii::$app->request->post())) {
+                $contactForm->contact('');
+            }
         }
+
+        return $this->redirect(['contact', compact('page', 'contactForm')]);
     }
 }
